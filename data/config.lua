@@ -11,6 +11,6 @@ Config.RespawnLocations ={
     ["hospital"] = vector3(338.8, -1394.5, 32.5)
 }
 
-Config.Ambulancejob = "wasabi_ambulance" --# Options [ "wasabi_ambulance", "esx_ambulancejob" ]
+Config.Ambulancejob = "wasabi_ambulance" --# Options [ "wasabi_ambulance", "esx_ambulancejob", "frp-ambulance", "srp-ambulance" ]
 
 return Config

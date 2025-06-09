@@ -57,6 +57,10 @@ RegisterNetEvent("walter-newlife:server:respawn", function(location)
         TriggerClientEvent("esx_ambulancejob:revive", src)
     elseif string.lower(Config.Ambulancejob or "") == "wasabi_ambulance" then
         exports.wasabi_ambulance:RevivePlayer(src)
+    elseif string.lower(Config.Ambulancejob or "") == "frp-ambulance" then
+        TriggerClientEvent("frp-ambulance:client:staffrevive:player", src)
+    elseif string.lower(Config.Ambulancejob or "") == "srp-ambulance" then
+        TriggerClientEvent("srp-ambulance:revive", src)
     end
 
     TriggerClientEvent("walter-newlife:client:teleport", src, coords)
