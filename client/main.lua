@@ -1,3 +1,6 @@
+--# Fetch config from server
+local Config = vx.callback.await("walter-newlife:server:fetchConfig")
+
 function openNewlifeMenu()
     local isDead = false
 
@@ -79,6 +82,14 @@ end, false)
 
 RegisterNetEvent("walter-newlife:client:teleport")
 AddEventHandler("walter-newlife:client:teleport", function(coords)
+    DoScreenFadeOut(1000)
+    while not IsScreenFadedOut() do
+        Wait(50)
+    end
+
     local ped = PlayerPedId()
     SetEntityCoords(ped, coords.x, coords.y, coords.z, false, false, false, true)
+    Wait(500)
+
+    DoScreenFadeIn(1000)
 end)

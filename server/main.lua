@@ -1,5 +1,9 @@
 ESX = exports["es_extended"]:getSharedObject()
 
+-- [[ IMPORTS ]]
+local Config = require("data.config")
+
+-- [[ CALLBACKS ]] --
 vx.callback.register("walter-newlife:server:isAllowed", function(source)
     local xPlayer = ESX.GetPlayerFromId(source)
     if not xPlayer then
@@ -31,6 +35,11 @@ vx.callback.register("walter-newlife:server:returnAmbulance", function()
     return count
 end)
 
+vx.callback.register("walter-newlife:server:fetchConfig", function()
+    return Config
+end)
+
+-- [[ EVENT ]] --
 RegisterNetEvent("walter-newlife:server:respawn", function(location)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
