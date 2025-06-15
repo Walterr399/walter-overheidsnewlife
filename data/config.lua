@@ -1,5 +1,7 @@
 Config = {}
 
+Config.Debug = false
+
 Config.AllowedJobs = {
     "police",
     "kmar",

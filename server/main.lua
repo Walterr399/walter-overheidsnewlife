@@ -1,5 +1,11 @@
 ESX = exports["es_extended"]:getSharedObject()
 
+if Config.Debug then
+    if not ESX then
+        vx.print.debug("failed to fetch ESX")
+    end
+end
+
 -- [[ IMPORTS ]]
 local Config = require("data.config")
 
@@ -43,14 +49,18 @@ end)
 RegisterNetEvent("walter-newlife:server:respawn", function(location)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
+
     if not xPlayer then
         return 
     end
 
     local coords = Config.RespawnLocations[location]
-    if not coords then
-        vx.print.debug("invalid spawn location")
-        return
+
+    if Config.Debug then
+        if not coords then
+            vx.print.debug("invalid spawn location")
+            return
+        end
     end
 
     if string.lower(Config.Ambulancejob or "") == "esx_ambulancejob" then

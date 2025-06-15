@@ -2,12 +2,10 @@
 local Config = vx.callback.await("walter-newlife:server:fetchConfig")
 
 function openNewlifeMenu()
-    local isDead = false
+    local isDead = IsEntityDead(PlayerPedId())
 
     if Config.Ambulancejob == "wasabi_ambulance" then
         isDead = exports.wasabi_ambulance:isPlayerDead(GetPlayerServerId(PlayerId()))
-    else
-        isDead = IsEntityDead(PlayerPedId())
     end
 
     if not isDead then
@@ -80,8 +78,7 @@ RegisterCommand("newlife", function()
     openNewlifeMenu()
 end, false)
 
-RegisterNetEvent("walter-newlife:client:teleport")
-AddEventHandler("walter-newlife:client:teleport", function(coords)
+RegisterNetEvent("walter-newlife:client:teleport", function(coords)
     DoScreenFadeOut(1000)
     while not IsScreenFadedOut() do
         Wait(50)
