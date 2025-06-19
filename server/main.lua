@@ -70,8 +70,10 @@ RegisterNetEvent("walter-newlife:server:respawn", function(location)
     elseif string.lower(Config.Ambulancejob or "") == "frp-ambulance" then
         TriggerClientEvent("frp-ambulance:client:staffrevive:player", src)
     elseif string.lower(Config.Ambulancejob or "") == "srp-ambulance" then
-        TriggerClientEvent("srp-ambulance:revive", src)
+        TriggerClientEvent("srp:ambulance:revive", src)
     end
 
-    TriggerClientEvent("walter-newlife:client:teleport", src, coords)
+    SetTimeout(1000, function ()
+        TriggerClientEvent("walter-newlife:client:teleport", src, coords)
+    end)
 end)
