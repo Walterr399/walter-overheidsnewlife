@@ -1,7 +1,5 @@
---# Fetch config from server
-local Config = vx.callback.await("walter-newlife:server:fetchConfig")
-
 function openNewlifeMenu()
+    local Config = vx.callback.await("walter-newlife:server:fetchConfig")
     local isDead = IsEntityDead(PlayerPedId())
 
     if Config.Ambulancejob == "wasabi_ambulance" then
@@ -10,9 +8,9 @@ function openNewlifeMenu()
 
     if not isDead then
         vx.notify({
-            title = "Niet dood",
+            title = "Fout!",
             message = "Je bent niet dood.",
-            type = "error"
+            type = "inform"
         })
         return
     end
@@ -20,7 +18,7 @@ function openNewlifeMenu()
     local ambulanceCount = vx.callback.await("walter-newlife:server:returnAmbulance")
     if ambulanceCount > 2 then
         vx.notify({
-            title = "Helaas",
+            title = "Fout!",
             message = "Je kunt niet respawnen omdat er ambulancepersoneel aanwezig is.",
             type = "inform"
         })
@@ -68,9 +66,9 @@ RegisterCommand("newlife", function()
 
     if not isAllowed then
         vx.notify({
-            title = "Geen toegang",
+            title = "Fout!",
             message = "Je hebt geen toegang tot dit commando.",
-            type = "error"
+            type = "inform"
         })
         return
     end
