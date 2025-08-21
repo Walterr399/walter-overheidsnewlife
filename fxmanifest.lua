@@ -5,7 +5,7 @@ game "gta5"
 
 author "Walterr399"
 version "1.0.0"
-description "A simple and secure newlife system built for fivem."
+description "A simple and secure newlife system built for esx."
 
 client_scripts {
     "client/*.lua"
@@ -18,12 +18,10 @@ server_scripts {
 
 shared_scripts {
     "@es_extended/imports.lua",
-    "@ox_lib/init.lua",
-    "@vx_lib/init.lua"
+    "@ox_lib/init.lua"
 }
 
 dependencies {
     "ox_lib",
-    "vx_lib",
     "es_extended"
 }

@@ -1,6 +1,8 @@
 Config = {}
 
-Config.Debug = false
+Config.Debug = true
+Config.Fixes = false -- Turn on if ESX.GetExtendedPlayers() doesn't work
+Config.MinAmbulanceCount = 2 --# The minimum amount of ambulance that must be online to block AllowedJobs from using the newlife command
 
 Config.AllowedJobs = {
     "police",

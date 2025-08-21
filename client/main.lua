@@ -1,26 +1,26 @@
-function openNewlifeMenu()
-    local Config = vx.callback.await("walter-newlife:server:fetchConfig")
-    local isDead = IsEntityDead(PlayerPedId())
+function OpenNewlifeMenu()
+    local Config = lib.callback.await("walter-newlife:server:fetchConfig")
+    local isDead = IsEntityDead(cache.ped)
 
     if Config.Ambulancejob == "wasabi_ambulance" then
         isDead = exports.wasabi_ambulance:isPlayerDead(GetPlayerServerId(PlayerId()))
     end
 
     if not isDead then
-        vx.notify({
+        lib.notify({
             title = "Fout!",
-            message = "Je bent niet dood.",
-            type = "inform"
+            description = "Je bent niet dood!",
+            type = "error"
         })
         return
     end
 
-    local ambulanceCount = vx.callback.await("walter-newlife:server:returnAmbulance")
-    if ambulanceCount > 2 then
-        vx.notify({
+    local ambulanceCount = lib.callback.await("walter-newlife:server:returnAmbulance")
+    if ambulanceCount > Config.MinAmbulanceCount then
+        lib.notify({
             title = "Fout!",
-            message = "Je kunt niet respawnen omdat er ambulancepersoneel aanwezig is.",
-            type = "inform"
+            description = "Je kunt niet respawnen omdat er ambulancepersoneel aanwezig is.",
+            type = "error"
         })
         return
     end
@@ -32,26 +32,26 @@ function openNewlifeMenu()
             {
                 title = 'Begraafplaats',
                 onSelect = function()
-                    vx.notify({
+                    lib.notify({
                         title = "Je wordt gereanimeerd...",
-                        message = "Je wordt binnen 30 seconden gespawned bij de begraafplaats.",
+                        description = "Je wordt binnen 30 seconden gespawned bij de begraafplaats.",
                         type = "inform"
                     })
                     SetTimeout(30000, function()
-                        vx.TriggerServerEvent("walter-newlife:server:respawn", "graveyard")
+                        TriggerServerEvent("walter-newlife:server:respawn", "graveyard")
                     end)
                 end
             },
             {
                 title = 'Ziekenhuis',
                 onSelect = function()
-                    vx.notify({
+                    lib.notify({
                         title = "Je wordt gereanimeerd...",
-                        message = "Je wordt binnen 30 seconden gespawned bij het ziekenhuis.",
+                        description = "Je wordt binnen 30 seconden gespawned bij het ziekenhuis.",
                         type = "inform"
                     })
                     SetTimeout(30000, function()
-                        vx.TriggerServerEvent("walter-newlife:server:respawn", "hospital")
+                        TriggerServerEvent("walter-newlife:server:respawn", "hospital")
                     end)
                 end
             }
@@ -62,18 +62,18 @@ function openNewlifeMenu()
 end
 
 RegisterCommand("newlife", function()
-    local isAllowed = vx.callback.await("walter-newlife:server:isAllowed")
+    local isAllowed = lib.callback.await("walter-newlife:server:isAllowed")
 
     if not isAllowed then
-        vx.notify({
+        lib.notify({
             title = "Fout!",
-            message = "Je hebt geen toegang tot dit commando.",
+            description = "Je hebt geen toegang tot dit commando.",
             type = "inform"
         })
         return
     end
 
-    openNewlifeMenu()
+    OpenNewlifeMenu()
 end, false)
 
 RegisterNetEvent("walter-newlife:client:teleport", function(coords)
@@ -82,8 +82,7 @@ RegisterNetEvent("walter-newlife:client:teleport", function(coords)
         Wait(50)
     end
 
-    local ped = PlayerPedId()
-    SetEntityCoords(ped, coords.x, coords.y, coords.z, false, false, false, true)
+    SetEntityCoords(cache.ped, coords.x, coords.y, coords.z, false, false, false, true)
     Wait(500)
 
     DoScreenFadeIn(1000)
