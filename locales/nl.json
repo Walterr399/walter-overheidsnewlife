@@ -1,0 +1,14 @@
+{
+  "error": "Fout!",
+  "error_not_dead": "Je bent niet dood!",
+  "error_ambulance": "Je kunt niet respawnen omdat er teveel ambulance aanwezig is.",
+  "error_not_allowed": "Je kunt geen gebruik maken van dit spier.",
+
+  "respawn_menu_title": "Waar wil je respawnen?",
+  "respawn_graveyard": "Begraafplaats",
+  "respawn_hospital": "Ziekenhuis",
+
+  "respawn_notify_title": "Je wordt gereanimeerd...",
+  "respawn_graveyard_desc": "Je wordt binnen 30 seconden gespawned bij de begraafplaats.",
+  "respawn_hospital_desc": "Je wordt binnen 30 seconden gespawned bij het ziekenhuis."
+}

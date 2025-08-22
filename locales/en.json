@@ -1,0 +1,14 @@
+{
+  "error": "Error!",
+  "error_not_dead": "You are not dead!",
+  "error_ambulance": "You cannot respawn because there are too many ambulances online.",
+  "error_not_allowed": "You cannot use this command.",
+
+  "respawn_menu_title": "Where do you want to respawn?",
+  "respawn_graveyard": "Graveyard",
+  "respawn_hospital": "Hospital",
+
+  "respawn_notify_title": "You are being revived...",
+  "respawn_graveyard_desc": "You will respawn at the graveyard in 30 seconds.",
+  "respawn_hospital_desc": "You will respawn at the hospital in 30 seconds."
+}

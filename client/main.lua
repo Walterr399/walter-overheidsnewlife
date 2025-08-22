@@ -1,3 +1,5 @@
+lib.locale()
+
 function OpenNewlifeMenu()
     local Config = lib.callback.await("walter-newlife:server:fetchConfig")
     local isDead = IsEntityDead(cache.ped)
@@ -7,34 +9,32 @@ function OpenNewlifeMenu()
     end
 
     if not isDead then
-        lib.notify({
-            title = "Fout!",
-            description = "Je bent niet dood!",
+        return lib.notify({
+            title = locale('error'),
+            description = locale('error_not_dead'),
             type = "error"
         })
-        return
     end
 
     local ambulanceCount = lib.callback.await("walter-newlife:server:returnAmbulance")
     if ambulanceCount > Config.MinAmbulanceCount then
-        lib.notify({
-            title = "Fout!",
-            description = "Je kunt niet respawnen omdat er ambulancepersoneel aanwezig is.",
+        return lib.notify({
+            title = locale('error'),
+            description = locale('error_ambulance'),
             type = "error"
         })
-        return
     end
 
     lib.registerContext({
         id = 'newlife_menu',
-        title = 'Waar wil je respawnen?',
+        title = locale('respawn_menu_title'),
         options = {
             {
-                title = 'Begraafplaats',
+                title = locale('respawn_graveyard'),
                 onSelect = function()
                     lib.notify({
-                        title = "Je wordt gereanimeerd...",
-                        description = "Je wordt binnen 30 seconden gespawned bij de begraafplaats.",
+                        title = locale('respawn_notify_title'),
+                        description = locale('respawn_graveyard_desc'),
                         type = "inform"
                     })
                     SetTimeout(30000, function()
@@ -43,11 +43,11 @@ function OpenNewlifeMenu()
                 end
             },
             {
-                title = 'Ziekenhuis',
+                title = locale('respawn_hospital'),
                 onSelect = function()
                     lib.notify({
-                        title = "Je wordt gereanimeerd...",
-                        description = "Je wordt binnen 30 seconden gespawned bij het ziekenhuis.",
+                        title = locale('respawn_notify_title'),
+                        description = locale('respawn_hospital_desc'),
                         type = "inform"
                     })
                     SetTimeout(30000, function()
@@ -65,24 +65,22 @@ RegisterCommand("newlife", function()
     local isAllowed = lib.callback.await("walter-newlife:server:isAllowed")
 
     if not isAllowed then
-        lib.notify({
-            title = "Fout!",
-            description = "Je hebt geen toegang tot dit commando.",
+        return lib.notify({
+            title = locale('error'),
+            description = locale('error_not_allowed'),
             type = "inform"
         })
-        return
     end
 
     OpenNewlifeMenu()
 end, false)
 
-RegisterNetEvent("walter-newlife:client:teleport", function(coords)
+RegisterNetEvent("walter-newlife:client:fade", function(coords)
     DoScreenFadeOut(1000)
     while not IsScreenFadedOut() do
         Wait(50)
     end
 
-    SetEntityCoords(cache.ped, coords.x, coords.y, coords.z, false, false, false, true)
     Wait(500)
 
     DoScreenFadeIn(1000)

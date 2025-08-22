@@ -1,47 +1,57 @@
-ESX = exports["es_extended"]:getSharedObject()
+local Config = require "data.config"
 
--- [[ IMPORTS ]]
-local Config = require("data.config")
+function SendLog(title, message, color)
+    if not Config.DiscordLogs then
+        return false
+    end
 
--- [[ CALLBACKS ]] --
-lib.callback.register("walter-newlife:server:isAllowed", function(source)
-    local xPlayer = ESX.GetPlayerFromId(source)
-
-    if not xPlayer then
+    if Config.Webhook == "" then
         if Config.Debug then
-            print("[DEBUG] Failed to get coords")
+            print("^3[DEBUG]^0 ^1Discord logging is enabled, but no webhook URL is set in Config.Webhook^0")
         end
         return false
     end
 
-    for _, job in pairs(Config.AllowedJobs) do
-        if xPlayer.job.name == job then
-            return true
-        end
+    local embed = {
+        {
+            ["title"] = title,
+            ["description"] = message,
+            ["color"] = color or 16777215,
+            ["footer"] = {
+                ["text"] = os.date("%Y-%m-%d %H:%M:%S")
+            }
+        }
+    }
+
+    PerformHttpRequest(Config.Webhook, function() end, "POST", json.encode({
+        username = "WDEV - Newlife | All rigthts reserved.",
+        embeds = embed
+    }), { ["Content-Type"] = "application/json" })
+end
+
+lib.callback.register("walter-newlife:server:isAllowed", function(source)
+    local xPlayer = ESX.GetPlayerFromId(source)
+
+    if not xPlayer then
+        return false
     end
 
-    return false
+    if not Config.AllowedJobs[xPlayer.job.name] then
+        return false
+    end
+
+    return true
 end)
 
 lib.callback.register("walter-newlife:server:returnAmbulance", function()
     local count = 0
-    local players = {}
-
-    if Config.Fixes then
-        for i = 0, GetNumPlayerIndices() - 1 do
-            local playerId = GetPlayerFromIndex(i)
-            local xPlayer = ESX.GetPlayerFromId(playerId)
-            if xPlayer then table.insert(players, xPlayer) end
-        end
-    else
-        players = ESX.GetExtendedPlayers()
-    end
+    local players = ESX.GetExtendedPlayers()
 
     if not players then
         if Config.Debug then
-            print("Error while trying to fetch players using `ESX.GetExtendedPlayers()`, you can fix this error by turning `Config.Fixes` on.")
+            print("^3[DEBUG]^0 ^1Error while trying to fetch players using ^0`ESX.GetExtendedPlayers()`^1, you can fix this by upgrading your ^0`es_extended`^0")
         end
-        return count
+        return count --# Returns 0, because it cannot fetch the amount of players.
     end
 
     for _, player in pairs(players) do
@@ -57,15 +67,11 @@ lib.callback.register("walter-newlife:server:fetchConfig", function()
     return Config
 end)
 
--- [[ EVENT ]] --
 RegisterNetEvent("walter-newlife:server:respawn", function(location)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
 
     if not xPlayer then
-        if Config.Debug then
-            print("[ERROR] Failed to get player")
-        end
         return 
     end
 
@@ -73,7 +79,7 @@ RegisterNetEvent("walter-newlife:server:respawn", function(location)
 
     if not coords then
         if Config.Debug then
-            print("[ERROR] Failed to get coords")
+            print(("^3[DEBUG]^0 ^1Failed to get coords^0"))
         end
         return
     end
@@ -86,9 +92,19 @@ RegisterNetEvent("walter-newlife:server:respawn", function(location)
         TriggerClientEvent("frp-ambulance:client:staffrevive:player", src)
     elseif string.lower(Config.Ambulancejob or "") == "srp-ambulance" then
         TriggerClientEvent("srp:ambulance:revive", src)
+    elseif string.lower(Config.Ambulancejob or "") == "ars_ambulancejob" then
+        TriggerClientEvent("ars_ambulancejob:healPlayer", src, {revive = true})
     end
 
     SetTimeout(1000, function ()
-        TriggerClientEvent("walter-newlife:client:teleport", src, coords)
+        TriggerClientEvent("walter-newlife:client:fade", src, coords)
+        SetEntityCoords(GetPlayerPed(src), coords)
     end)
+
+    SendLog(
+        "Newlife Respawn",
+        string.format("**%s** [%d] used /newlife and respawned at **%s**.",
+        xPlayer.getName(), src, location),
+        3066993
+    )
 end)

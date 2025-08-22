@@ -21,7 +21,6 @@ shared_scripts {
     "@ox_lib/init.lua"
 }
 
-dependencies {
-    "ox_lib",
-    "es_extended"
+files {
+    "locales/*.json"
 }
